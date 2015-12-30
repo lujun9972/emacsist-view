@@ -45,10 +45,15 @@
 
 ;; define emacsist-mode
 
-(defun emacsist-view ()
+(defun emacsist-eww-view ()
   (interactive)
   (let ((url (get-text-property (point) 'help-echo)));help-echo is also the url
     (eww-browse-url url)))
+
+(defun emacsist-browser-view ()
+  (interactive)
+  (let ((url (get-text-property (point) 'help-echo)));help-echo is also the url
+    (browse-url url)))
 
 (define-derived-mode emacsist-mode tabulated-list-mode "emacsist-mode"
   "mode for viewing emacsist.com"
@@ -56,7 +61,9 @@
                                ("author" 10 t)]
         tabulated-list-entries 'emacsist-extract-links)
   (tabulated-list-init-header)
-  (define-key emacsist-mode-map "v" 'emacsist-view))
+  (define-key emacsist-mode-map (kbd "v") 'emacsist-eww-view)
+  (define-key emacsist-mode-map (kbd "<RET>") 'emacsist-browser-view)
+  (define-key emacsist-mode-map (kbd "<down-mouse-1>") 'emacsist-browser-view))
 
 
 (defun list-emacsist ()
