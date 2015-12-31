@@ -41,12 +41,20 @@
       (error "NO MORE DATA"))
     (reverse entries)))
 
+(defun emacsist--select-or-create-buffer-window (buffer-or-name)
+  "若frame中有显示`buffer-or-name'的window,则选中该window,否则创建新window显示该buffer"
+  (let ((buf (get-buffer-create buffer-or-name)))
+    (unless (get-buffer-window buf)
+      (split-window)
+      (switch-to-buffer buf))
+    (select-window (get-buffer-window buf))))
 
 ;; define emacsist-mode
 
 (defun emacsist-eww-view ()
   (interactive)
   (let ((url (get-text-property (point) 'help-echo)));help-echo is also the url
+    (emacsist--select-or-create-buffer-window "*eww*")
     (eww-browse-url url)))
 
 (defun emacsist-browser-view ()
@@ -74,8 +82,8 @@
 (define-derived-mode emacsist-mode tabulated-list-mode "emacsist-mode"
   "mode for viewing emacsist.com"
   (setq tabulated-list-format [("title" 60 nil)
-                               ("author" 10 t)]
-        tabulated-list-entries 'emacsist-extract-links)
+			       ("author" 10 t)]
+	tabulated-list-entries 'emacsist-extract-links)
   (tabulated-list-init-header)
   (define-key emacsist-mode-map (kbd "v") 'emacsist-eww-view)
   (define-key emacsist-mode-map (kbd "<RET>") 'emacsist-browser-view)
