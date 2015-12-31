@@ -1,4 +1,5 @@
 (defvar emacsist-current-page 1)
+
 (defun emacsist-url (page)
   "return the url of emacsist.com"
   (format "http://emacsist.com/list/%d/com" page))
@@ -7,11 +8,6 @@
   "fetch links from url"
   (let ((content (url-get-content-from-html url)))
     content))
-
-(defun emacsist-link-p (tree)
-  (ignore-errors
-    (and (eq 'span (car tree))
-         (equal '((class . "title")) (cadr tree)))))
 
 (defun emacsist-extract-paper-link (line)
   (string-match "href=\"\\(http://emacsist.com/[0-9]+\\)\" data-wid=\"[0-9]+\">\\(.+\\)</a>" line)
@@ -30,6 +26,8 @@
   (let* ((url (or url (emacsist-url emacsist-current-page)))
          (buf (url-retrieve-synchronously url))
          paper-link author-link entries)
+    (unless buf
+      (error "fetch % failed" url))
     (with-current-buffer buf
       (goto-char (point-min))
       (while (search-forward "<span class=\"title\">" nil t)
@@ -39,6 +37,8 @@
         (setq author-link (emacsist-extract-author-link (thing-at-point 'line)))
         (push (list nil (vector paper-link author-link)) entries)))
     (kill-buffer buf)
+    (unless entries
+      (error "NO MORE DATA"))
     (reverse entries)))
 
 
@@ -58,7 +58,10 @@
   (interactive)
   (let ((N (or N 1)))
     (setq emacsist-current-page (+ emacsist-current-page N))
-    (list-emacsist)))
+    (condition-case err
+	(list-emacsist)
+      (error (setq emacsist-current-page (- emacsist-current-page 1))
+	     (signal (car err) (cdr err))))))
 
 (defun emacsist-previous-page (&optional N)
   (interactive)
