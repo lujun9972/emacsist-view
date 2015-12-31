@@ -92,7 +92,7 @@
   (define-key emacsist-mode-map (kbd "<prior>") 'emacsist-previous-page)
   )
 
-
+;;;###autoload
 (defun list-emacsist ()
   "list paper in emacsist.com"
   (interactive)
