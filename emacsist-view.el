@@ -12,13 +12,13 @@
 (defun emacsist-extract-paper-link (line)
   (string-match "href=\"\\(http://emacsist.com/[0-9]+\\)\" data-wid=\"[0-9]+\">\\(.+\\)</a>" line)
   (let ((url (match-string-no-properties 1 line))
-        (title (match-string-no-properties 2 line)))
+        (title (decode-coding-string (match-string-no-properties 2 line) 'utf-8)))
     (propertize title 'help-echo url)))
 
 (defun emacsist-extract-author-link (line)
   (string-match "href=\"\\(http://emacsist.com/[^\"]+\\)\" class=\"author\">\\(.+\\)</a>" line)
   (let ((url (match-string-no-properties 1 line))
-        (author (match-string-no-properties 2 line)))
+        (author (decode-coding-string (match-string-no-properties 2 line) 'utf-8)))
     (propertize author 'help-echo url)))
 
 (defun emacsist-extract-links (&optional url)
