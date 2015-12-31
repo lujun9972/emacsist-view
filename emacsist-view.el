@@ -1,3 +1,4 @@
+(defvar emacsist-current-page 1)
 (defun emacsist-url (page)
   "return the url of emacsist.com"
   (format "http://emacsist.com/list/%d/com" page))
@@ -26,7 +27,7 @@
 
 (defun emacsist-extract-links (&optional url)
   "extract links from HTML which is the source code of emacsist URL"
-  (let* ((url (or url (emacsist-url 1)))
+  (let* ((url (or url (emacsist-url emacsist-current-page)))
          (buf (url-retrieve-synchronously url))
          paper-link author-link entries)
     (with-current-buffer buf
@@ -39,8 +40,6 @@
         (push (list nil (vector paper-link author-link)) entries)))
     (kill-buffer buf)
     (reverse entries)))
-
-(emacsist-extract-links)
 
 
 ;; define emacsist-mode
@@ -55,6 +54,20 @@
   (let ((url (get-text-property (point) 'help-echo)));help-echo is also the url
     (browse-url url)))
 
+(defun emacsist-next-page (&optional N)
+  (interactive)
+  (let ((N (or N 1)))
+    (setq emacsist-current-page (+ emacsist-current-page N))
+    (list-emacsist)))
+
+(defun emacsist-previous-page (&optional N)
+  (interactive)
+  (let ((N (or N 1)))
+    (setq emacsist-current-page (- emacsist-current-page N))
+    (when (< emacsist-current-page 0)
+      (setq emacsist-current-page 0))
+    (list-emacsist)))
+
 (define-derived-mode emacsist-mode tabulated-list-mode "emacsist-mode"
   "mode for viewing emacsist.com"
   (setq tabulated-list-format [("title" 60 nil)
@@ -63,7 +76,10 @@
   (tabulated-list-init-header)
   (define-key emacsist-mode-map (kbd "v") 'emacsist-eww-view)
   (define-key emacsist-mode-map (kbd "<RET>") 'emacsist-browser-view)
-  (define-key emacsist-mode-map (kbd "<down-mouse-1>") 'emacsist-browser-view))
+  (define-key emacsist-mode-map (kbd "<down-mouse-1>") 'emacsist-browser-view)
+  (define-key emacsist-mode-map (kbd "<next>") 'emacsist-next-page)
+  (define-key emacsist-mode-map (kbd "<prior>") 'emacsist-previous-page)
+  )
 
 
 (defun list-emacsist ()
