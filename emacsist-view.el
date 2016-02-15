@@ -1,3 +1,47 @@
+;;; emacsist-view.el --- Mode for viewing emacsist.com
+
+;; Copyright (C) 2004-2015 Free Software Foundation, Inc.
+
+;; Author: DarkSun <lujun9972@gmail.com>
+;; Created: 2015-12-31
+;; Version: 0.1
+;; Keywords: convenience, usability
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Source code
+;;
+;; clean-buffers's code can be found here:
+;;   http://github.com/lujun9972/emacsist-view
+
+;;; Commentary:
+
+;; Mode for viewing emacsist.com
+
+;; Quick start:
+
+;; execute the following commands:
+;; `list-emacsist' to list posts in emacsist.com
+;; then press ~v~ to view post in eww
+;; press ~<RET>~ or ~click down mouse-1~ to browse current post with external browser
+;; press ~<next>~ to list posts in next-page
+;; press ~<prior>~ to list posts in previous-page
+
+;;; Code:
+
 (defvar emacsist-current-page 1)
 
 (defun emacsist-url (page)
@@ -100,3 +144,7 @@
   (emacsist-mode)
   (tabulated-list-print t))
 
+
+(provide 'emacsist-view)
+
+;;; emacsist-view.el ends here
