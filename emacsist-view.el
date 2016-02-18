@@ -108,9 +108,9 @@
   (let ((N (or N 1)))
     (setq emacsist-current-page (+ emacsist-current-page N))
     (condition-case err
-	(list-emacsist)
+        (list-emacsist)
       (error (setq emacsist-current-page (- emacsist-current-page 1))
-	     (signal (car err) (cdr err))))))
+             (signal (car err) (cdr err))))))
 
 (defun emacsist-previous-page (&optional N)
   (interactive)
@@ -123,14 +123,15 @@
 (define-derived-mode emacsist-mode tabulated-list-mode "emacsist-mode"
   "Mode for viewing emacsist.com"
   (setq tabulated-list-format [("title" 60 nil)
-			       ("author" 10 t)]
-	tabulated-list-entries 'emacsist-extract-links)
-  (tabulated-list-init-header)
-  (define-key emacsist-mode-map (kbd "v") 'emacsist-eww-view)
-  (define-key emacsist-mode-map (kbd "<RET>") 'emacsist-browser-view)
-  (define-key emacsist-mode-map (kbd "<down-mouse-1>") 'emacsist-browser-view)
-  (define-key emacsist-mode-map (kbd "<next>") 'emacsist-next-page)
-  (define-key emacsist-mode-map (kbd "<prior>") 'emacsist-previous-page))
+                               ("author" 10 t)]
+        tabulated-list-entries 'emacsist-extract-links)
+  (tabulated-list-init-header))
+
+(define-key emacsist-mode-map (kbd "v") 'emacsist-eww-view)
+(define-key emacsist-mode-map (kbd "<RET>") 'emacsist-browser-view)
+(define-key emacsist-mode-map (kbd "<down-mouse-1>") 'emacsist-browser-view)
+(define-key emacsist-mode-map (kbd "<next>") 'emacsist-next-page)
+(define-key emacsist-mode-map (kbd "<prior>") 'emacsist-previous-page)
 
 ;;;###autoload
 (defun list-emacsist ()
